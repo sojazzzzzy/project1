@@ -10,3 +10,4 @@ If the player guesses the wrong sequence, they lose a point
 If the player guesses the correct sequence, they move on to the next level, which is slightly harder than the level before
 Game is over when the player is out of points
 		 Player will start with 10 points 
+https://imgur.com/rz8PNCy
