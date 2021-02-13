@@ -25,11 +25,11 @@ console.log(`SIMON SAYS GAME!`)
 	// console.log(simonSays)
 
 //  simonSays game variable
-	let simonSays = []
+	let simonSays = [] 
 
 
 // userTurn game variable
-	let userSays = []
+	let playerSays = []
 
 // playerPoints variable
 	let playerPoints = 10
@@ -40,14 +40,26 @@ console.log(`SIMON SAYS GAME!`)
 // Player can not play if game is not on
 	let on = false
 
-// Tried running code but Simon is not defined on line 91, adding a variable for simon here
- 	let simon = false 
+// flashes the colors of simon sequence in a set interval time
+let flashColorsInterval;
+let colorFlash;
+//shows if player guess is correct or not
+let correct;
+
+//shows what level player is on and also correlates to the number of flashes simon will play
+let play;
+
+//player wins game
+let winGame = false;
+
+// Tried running code but Simon is not defined on line 94, adding a variable for simon here
+ 	let simon
 
 // simonSays colors
-const pink = document.querySelector('pink')
-const purple = document.querySelector('purple')
-const blue = document.querySelector('blue')
-const green = document.querySelector('green')
+const pink = document.querySelector('#pink')
+const purple = document.querySelector('#purple')
+const blue = document.querySelector('#blue')
+const green = document.querySelector('#green')
 const startGame = document.querySelector('#startButton')
 
 // startButton.addEventListener('click', (event) => {
@@ -58,18 +70,19 @@ startGame.addEventListener('click', (event) => {
 	console.log('start game!')
 	let startButton = true
 	if (startButton === true){
-		startSimonSaysGame()
+		playSimonSaysGame()
 	}
 })
 // set function for starting game
 // create empty array for simon's play, we will push in the order of the colors
-const startSimonSaysGame = ()=> {
+const playSimonSaysGame = ()=> {
 	console.log(playerPoints)
+	winGame = false 
 	simonPlay = [];
-	playerTurn = []; // empty array to be filled with player input
+	playerSays = []; // empty array to be filled with player input
 	correct = true; // this will show that player input matches the simon says input
 	colorFlash = 0; 
-	interval = 0; // this will set the timer that flashes the colors
+	flashColorsInterval = 0; // this will set the timer that flashes the colors
 	play = 1 // this keeps track of the level the player is on 
 
 
@@ -77,7 +90,9 @@ const startSimonSaysGame = ()=> {
 		simonPlay.push(Math.floor(Math.random() * 4) * 1)
 	} // code that loops the order of the colors and puses them into the simonPlay array
 	console.log(simonPlay)
-	flashColors = setInterval(simonTurn, 1000)
+	
+	flashColorsInterval = setInterval(simonTurn, 900)
+	
 	simon = true // this means it is the simonSays turn 
 }
 
@@ -85,13 +100,13 @@ simonTurn = ()=> {
 	on = false // while on is false, player can not play or input 
 
 	if (colorFlash === play) { //color flash is going to b e the number of times a color will flash. it must equal the same number of the playing level. if play level is 3, 3 colors should flash
-		clearInterval(interval);
+		clearInterval(flashColorsInterval);
 		simon = false; // simon's turn is over and the player's turn begins
 		clearColors(); // a function to clear the colors that are flashing on the game
 		on = true
 	}
 
-	if (simon === true){
+	if (simon){
 		clearColors(); 
 		setTimeout(() => {
 			if (simonSays[colorFlash]=== 1) {
@@ -106,38 +121,100 @@ simonTurn = ()=> {
 		}, 300)
 	}
 }
+
 clearColors = ()=>{
-	document.pink.background = "pink";
-	document.purple.background = "purple";
-	document.green.background = "lightgreen";
-	document.blue.background = "lightblue";
+	pink.style.background = "pink";
+	purple.style.background = "purple";
+	green.style.background = "lightgreen";
+	blue.style.background = "lightblue";
 }
 // create the functions that flash the colors different colors to indicate which button is being flashed
 
 oneColor = ()=>{
-	document.pink.background = "red"
+	pink.style.background = "red"
 }
 
 twoColors = ()=>{
-	document.purple.background = "lavender"
+	purple.style.background = "lavender"
 }
 
 threeColors = ()=>{
-	document.green.background = "darkgreen"
+	green.style.background = "darkgreen"
 }
 
 fourColors = ()=>{
-	document.blue.background= "darkblue"
+	blue.style.background= "darkblue"
 }
 
 
+// player clicks code
+
+pink.addEventListener('click', (event) =>{
+	if (on) {
+		playerSays.push(1)
+		checkTurn();
+		oneColor();
+		if (winGame === false) {
+			setTimeout(() =>{
+				clearColors()
+			}, 200)
+		}
+	}
+})
+
+purple.addEventListener('click', (event) =>{
+	if (on) {
+		playerSays.push(2)
+		checkTurn();
+		twoColors();
+		if (winGame === false) {
+			setTimeout(() =>{
+				clearColors()
+			}, 200)
+		}
+	}
+})
+
+green.addEventListener('click', (event) =>{
+	if (on) {
+		playerSays.push(3)
+		checkTurn();
+		threeColors();
+		if (winGame === false) {
+			setTimeout(() =>{
+				clearColors()
+			}, 200)
+		}
+	}
+})
+
+blue.addEventListener('click', (event) =>{
+	if (on) {
+		playerSays.push(4)
+		checkTurn();
+		fourColors();
+		if (winGame === false) {
+			setTimeout(() =>{
+				clearColors()
+			}, 200)
+		}
+	}
+})
 
 
+checkTurn = ()=>{
+	if (playerSays[playerSays.length - 1] !== simonSays[playerSays.length - 1]){
+		correct = false
+	}
+}
+	if (playerSays.length === 10 && correct){
+		playerWins()
+	}
 
-
-
-
-
+	if (correct === false){
+		alert(`you got it wrong!`)
+		playerPoints--
+	}
 
 
 
